@@ -1,0 +1,5 @@
+# Node.js
+node_modules/
+
+# Don't leak token lol
+config.json

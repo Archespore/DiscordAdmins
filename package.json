@@ -1,0 +1,15 @@
+{
+  "name": "discordadmins",
+  "version": "1.0.0",
+  "description": "4 fun Discord Bot",
+  "license": "ISC",
+  "author": "Exosomnia",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "discord.js": "^14.19.2"
+  }
+}
