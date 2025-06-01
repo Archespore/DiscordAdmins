@@ -1,0 +1,50 @@
+CREATE TYPE award_enum AS ENUM ('cringe', 'gamer');
+
+CREATE TABLE awards (
+    award_id SERIAL PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    group_id TEXT NOT NULL,
+    awarded_by TEXT NOT NULL,
+    award_type award_enum NOT NULL,
+    award_data JSONB,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE user_tokens (
+    user_id TEXT NOT NULL,
+    guild_id TEXT NOT NULL,
+    award_tokens INT NOT NULL DEFAULT 0,
+    discord_minutes INT NOT NULL DEFAULT 0,
+    last_reset INT NOT NULL DEFAULT 0,
+    CONSTRAINT pk_user PRIMARY KEY (user_id, guild_id) 
+);
+
+WITH updated AS (
+    UPDATE user_tokens
+    SET award_tokens = 3, last_reset = $3
+    WHERE user_id = $1 AND guild_id = $2 AND last_reset < $3
+    RETURNING *
+),
+inserted AS (
+    INSERT INTO user_tokens (user_id, guild_id, award_tokens, last_reset)
+    VALUES($1, $2, 3, $3)
+    ON CONFLICT DO NOTHING
+    RETURNING *
+)
+SELECT * FROM updated
+UNION
+SELECT * FROM inserted
+UNION
+SELECT * FROM user_tokens WHERE user_id = $1 AND guild_id = $2;
+
+UPDATE user_tokens
+SET ${column} = ${column} + $3
+WHERE user_id = $1 AND guild_id = $2 AND ($4::boolean = true OR ${column} >= ABS($3))
+RETURNING *;
+
+INSERT INTO awards(user_id, guild_id, awarded_by, award_type, award_data) 
+VALUES($1, $2, $3, $4, $5)
+RETURNING *;
+
+TRUNCATE TABLE awards RESTART IDENTITY;
+TRUNCATE TABLE user_tokens;
