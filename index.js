@@ -16,7 +16,7 @@ export class BotContext {
 //Client setup
 const config = JSON.parse(fs.readFileSync('./config.json'));
 const guildsConfig = JSON.parse(fs.readFileSync('./guilds-config.json'));
-const client = new Client({ intents:[GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
+const client = new Client({ intents:[GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildVoiceStates] });
 
 //PSQL & BotContext setup
 const psql = new Pool({

@@ -10,7 +10,6 @@ const listQuery =  `SELECT * FROM awards
                     LIMIT 5`;
 
 export default {
-    isSubcommand: true,
     /***
      * Execute function for this subcommand
      * @param {ChatInputCommandInteraction} interaction 

@@ -9,7 +9,6 @@ const giveQuery =   `INSERT INTO awards(user_id, guild_id, awarded_by, award_typ
                     RETURNING *;`;
 
 export default {
-    isSubcommand: true,
     /***
      * Execute function for this subcommand
      * @param {ChatInputCommandInteraction} interaction 
@@ -37,7 +36,7 @@ export default {
                                                                          \nYou currently have ${awardeeTokensLeft} award token(s).`}); }
 
         const awardedUserId = interaction.options.getUser('user', true).id;
-        const award = await botContext.psql.query(giveQuery, [awardedUserId, awardGuildId, awardeeUserId, awardType, { reason: interaction.options.getString('reason') }]);
+        const award = await botContext.psql.query(giveQuery, [awardedUserId, awardGuildId, awardeeUserId, awardType, { reason: interaction.options.getString('reason') ?? '' }]);
         if ("announceChannel" in botContext.guildsConfig[awardGuildId]) {
             const announceChannelId = botContext.guildsConfig[awardGuildId].announceChannel;
             const announceChannel = await awardGuild?.channels.resolve(announceChannelId);
