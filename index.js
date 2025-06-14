@@ -15,6 +15,7 @@ export class BotContext {
 
 //Client setup
 const config = JSON.parse(fs.readFileSync('./config.json'));
+config.downloaders = new Set(config.downloaders);
 const guildsConfig = JSON.parse(fs.readFileSync('./guilds-config.json'));
 const client = new Client({ intents:[GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildVoiceStates] });
 
@@ -30,6 +31,7 @@ const botContext = new BotContext(client, config, guildsConfig, psql);
 
 //Command setup
 client.commands = new Collection();
+client.audio = new Collection();
 async function loadCommandDir(dirPath) {
     const directoryFiles = fs.readdirSync(dirPath, { withFileTypes: true });
 

@@ -28,7 +28,9 @@ const getQuery =    `WITH updated AS (
                     UNION
                     SELECT * FROM inserted
                     UNION
-                    SELECT * FROM user_tokens WHERE user_id = $1 AND guild_id = $2;`;
+                    SELECT * FROM user_tokens WHERE user_id = $1 AND guild_id = $2
+                    AND NOT EXISTS (SELECT 1 FROM updated)
+                    AND NOT EXISTS (SELECT 1 FROM inserted);`;
 
 /**
  * Gets all current values of the specified user's tokens
